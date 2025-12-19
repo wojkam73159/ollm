@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ollm"
+version = "0.5.0"
+description = "LLM Inference for Large-Context Offline Workloads"
+authors = [
+  { name="Anuar Sharafudinov", email="anuarsh@ailabs.us" }
+]
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    # Let the PyTorch index choose the CUDA build; don't include +cuXXX here.
+    "torch==2.8.*",
+    "transformers>=4.55.4",
+    "accelerate",
+    "flash-attn==2.7.4.post1",
+    "flash-linear-attention",
+    "cupy>=13.6.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Mega4alik/ollm"
+"Bug Tracker" = "https://github.com/Mega4alik/ollm/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.extra-build-dependencies]
+flash-attn = ["torch", "numpy"]
+
+# --- uv resolver/index configuration ---
+[tool.uv]
+# Keep PyPI as the default index.
+index-url = "https://pypi.org/simple"
+
+# Map specific packages to the PyTorch CUDA 12.6 wheel index on Linux/Windows.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu126", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
+
+# Define the PyTorch CUDA 12.6 index explicitly.
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true

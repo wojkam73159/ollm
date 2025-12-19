@@ -1,0 +1,25 @@
+uv build --wheel --out-dir wheelhouse_windows
+
+uv export --format requirements-txt --no-dev -o requirements-linux.txt
+
+
+uv pip install kvikio-cu12 //this is failing
+
+ uv pip install --extra-index-url https://pypi.nvidia.com kvikio-cu12 
+
+
+uv sync
+
+--linux
+sed 's/ --hash=[^ ]*//g' requirements-linux.txt > requirements-linux-2.txt
+
+(Get-Content requirements-linux.txt) -replace " --hash=\S+", "" |
+    Set-Content requirements-linux-2.txt
+
+
+
+(Get-Content requirements-linux.txt) `
+-replace " --hash=\S+", "" `        
+| Where-Object { $_.Trim() -ne "" } ` 
+| Where-Object { $_.Trim() -ne "\" } ` 
+| Set-Content requirements-linux-2.txt

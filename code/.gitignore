@@ -10,3 +10,4 @@ build/
 *.egg-info/
 src/ollm.egg-info
 ollm_env/
+wheelhouse/
